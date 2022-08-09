@@ -1,20 +1,21 @@
-import { useEffect, useState } from "react";
+import { useEffect, useReducer, useState } from "react";
 import{Link } from "react-router-dom"
 import "./MainPageCSS.css"
 import WeatherData from "./WeatherData";
 import Container from 'react-bootstrap/Container';
 import Navbar from 'react-bootstrap/Navbar';
-
-
+import useLocalStorage from "../../../useLocalStorage";
+import SearchComp from "./SearchComp";
 
 function WeatherPage(){
-   const [city, setCity] = useState("craiova"); 
+   const [city, setCity] = useLocalStorage("city",""); 
    const [weatherInfo, setWeatherInfo]= useState({});
    const [loading, setLoading]= useState(true);
+   
    useEffect(()=>{
        handleFetch();
-       
    },[])
+
    const API_URL=`http://api.weatherapi.com/v1/forecast.json?key=f3ccb1cf28744fea8bd143806223107&q=${city}&days=6&aqi=yes&alerts=yes`;
    const handleFetch = async() =>{
       await fetch(API_URL)
@@ -48,24 +49,33 @@ function WeatherPage(){
        }));
        setLoading(false);
    }
-   
-
- return loading ? (<h3> Loading... </h3>):(
+   function logOut(){
+      window.location.href = '/';
+   }
+   const handleSearchCity = (searchCity)=>{
+    setCity(searchCity.value);
+    handleFetch();
+    console.log(searchCity)
+   }
+ return (
  <div className="all">
   <Navbar expand="lg" variant="dark" bg="dark">
       <Container>
         <Navbar.Brand><Link to={"/home"} className="navlogo">Weather App</Link></Navbar.Brand>
+        <a className="logout" onClick={logOut}>Logout</a>
       </Container>
     </Navbar>
  
  <h1 className="contentmain">Hello, welcome to the Weather App </h1> 
  
  <div className="weather"> 
-  <input type="text" value={city} onChange={(e)=> setCity(e.target.value)}/>
-  <button class="searchbtn" onClick={handleFetch}>Search</button>
- </div>
   
-  <WeatherData weatherInfo={weatherInfo}/>
+ 
+  <SearchComp onSearchCity={handleSearchCity}/>
+  <button class="searchbtn" onClick={handleFetch}>Search</button>
+  </div>
+ 
+  {loading ? (<div><h1>Loading...</h1></div>) : (<WeatherData weatherInfo={weatherInfo}/>)}
 
 
 </div>);

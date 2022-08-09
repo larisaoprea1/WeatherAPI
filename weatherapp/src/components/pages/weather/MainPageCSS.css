@@ -12,9 +12,7 @@
 .imgsun{
     width: 400px;
 }
-input{
-    border: 1px solid black;
-}
+
 .searchbtn{
     background-color: #2f00b2;
     border: 2px solid #2f00b2;
@@ -44,4 +42,18 @@ input{
 }
 .navlogo:hover{
     color: #a180fd;
+}
+.logout{
+    color: white;
+    text-decoration: none;
+    cursor: pointer;
+}
+.logout:hover{
+    color: #a180fd;
+}
+.searchbar{
+    width: 50%;
+}
+.loadingIndicator{
+    width: 20px;
 }
